@@ -171,7 +171,7 @@ What is the default gateway of each machine? `ip route`
 What is the DNS server of each machine? `cat /etc/resolv.conf`
 Which machines have a static IP and which use DHCP? `cat /etc/network/interfaces`
 
-Investigate whether the DNS server of the company network is vulnerable to a DNS zone transfer "attack": `dig @172.30.0.4 cybersec.internal AXFR` of windows `nslookup server 172.30.0.4 set type=AXFR cybersec.internal`
+Investigate whether the DNS server of the company network is vulnerable to a DNS zone transfer "attack": on kali: `dig @172.30.0.4 cybersec.internal AXFR` of windows `nslookup server 172.30.0.4 set type=AXFR cybersec.internal`
 Try to configure the server to allow & prevent this attack: `sudo cat /etc/bind/named.conf`
 
 ```bash

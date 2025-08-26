@@ -31,7 +31,9 @@ https://documentation.wazuh.com/current/quickstart.html
 
 Wazuh credentials:
 
-User: admin
-Password: BDnQpLEl5OZF+fuM57EJe+U+*ljNuAKa
+- companyrouter: wazuh-manager
+- web: wazuh-agent
+- User: admin
+- Password: BDnQpLEl5OZF+fuM57EJe+U+*ljNuAKa
 
 https://192.168.62.253

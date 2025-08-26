@@ -166,6 +166,8 @@ Software die reverse proxy én load balancer kan zijn: Nginx, HAProxy, Envoy, Tr
 
 ## Lab
 
+Try the -sC option with nmap. What is this option? run default scripts
+
 Wat is een 'attack vector'? Een attack vector is de *route of methode* waarlangs een aanvaller toegang probeert te krijgen tot een doelwit om een schadelijke actie uit te voeren.
 Het is dus “hoe ze binnenkomen” —via welk kanaal/medium— niet per se *welk* specifiek lek of *welke* malware wordt gebruik.
 
