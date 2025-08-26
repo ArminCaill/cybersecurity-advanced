@@ -18,7 +18,7 @@ fake_internet:
     isprouter:
       ansible_host: 192.168.62.254
     # red:
-    #   ansible_host: 192.168.62.66
+    #   ansible_host: 192.168.62.142
     homerouter:
       ansible_host: 192.168.62.42
 

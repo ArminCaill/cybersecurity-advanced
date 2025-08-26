@@ -47,10 +47,10 @@ Toepassing:
 - Bedoeld vs. niet bedoeld: losse lookups zijn normaal. Volledige zone-lijsten of interne namen zijn doorgaans niet bedoeld om publiek uit te lezen.
 
 ```bash
-dig example.com A           # standaard lookup
-dig +short example.com      # beknopt
-drill example.com           # alternatief voor dig
-nslookup example.com        # legacy tool
+nslookup www.ugent.be
+dig www.ugent.be A           # standaard lookup
+dig +short www.ugent.be      # beknopt
+dig +short NS ugent.be       # authoritative server
 ```
 
 ### What is, and how can you perform a reverse lookup?
@@ -58,7 +58,7 @@ nslookup example.com        # legacy tool
 - Betekenis: IP → hostname via PTR record in in-addr.arpa (IPv4) of ip6.arpa (IPv6).
 
 ```bash
-dig -x 8.8.8.8
+dig +short -x 157.193.43.50
 host 8.8.8.8
 ```
 
@@ -67,8 +67,8 @@ host 8.8.8.8
 - De NS-servers die “de waarheid” voor een zone beheren en beantwoorden zonder te cachen. Ze dienen als bron voor recursors.
 
 ```bash
-dig NS example.com +short
-dig SOA example.com
+dig NS www.ugent.be +short
+dig SOA www.ugent.be
 ```
 
 ### What is a zone transfer attack and why is it called an attack? Is a zone transfer always harmful?
@@ -78,9 +78,9 @@ dig SOA example.com
 - Is het altijd schadelijk? Nee. Tussen vertrouwde servers is het normaal; het wordt pas een probleem bij ongeautoriseerde transfers.
 
 ```bash
-dig AXFR example.com @ns1.example.com
+dig AXFR www.ugent.be @ns1.www.ugent.be
 # of
-dig IXFR=12345 example.com @ns1.example.com
+dig IXFR=12345 www.ugent.be @ns1.www.ugent.be
 
 ```
 
@@ -145,3 +145,41 @@ Tip: Voeg -nn toe om geen DNS/poort-namen te resolven en -v/-vv voor extra detai
 - Protocol Hierarchy:
   - Wat: boom met percentage per protocol (L2→L7) en bytes/packets per tak.
   - Waarom nuttig: snel zien welke protocollen domineren (bv. veel TLS vs. ongewoon SMB/DNS-TXT), en afwijkingen herkennen (bv. onverwacht QUIC/UDP op servernet).
+
+## Lab
+
+- Figure out a way to sniff traffic origination from the employee using tcpdump on the companyrouter: `sudo tcpdump -i eth2 -n host 172.30.0.123`
+- Figure out a way to capture the data in a file. Copy this file from the companyrouter to your host and verify you can analyze this file with wireshark (on your host): `sudo tcpdump -i eth2 -w capture.pcap` en `scp vagrant@192.168.62.253:/home/vagrant/capture.pcap .`
+- How can you start tcpdump and filter out this ssh traffic? `sudo tcpdump -i eth2 port 22`
+- Find a way to capture only HTTP traffic and only from and to the webserver-machine: `sudo tcpdump -i eth2 host 172.30.0.10 and port 80 -w http-capture.pcap`
+
+Configure this machine correctly in such a way that it has internet access and is able to connect to all other virtual machines of the environment.
+
+`sudo nano /etc/network/interfaces`
+
+```bash
+auto eth0
+iface eth0 inet static
+    address 192.168.62.142
+    netmask 255.255.255.0
+    gateway 192.168.62.254
+```
+
+`sudo systemctl restart networking`
+
+What is the default gateway of each machine? `ip route`
+What is the DNS server of each machine? `cat /etc/resolv.conf`
+Which machines have a static IP and which use DHCP? `cat /etc/network/interfaces`
+
+Investigate whether the DNS server of the company network is vulnerable to a DNS zone transfer "attack": `dig @172.30.0.4 cybersec.internal AXFR` of windows `nslookup server 172.30.0.4 set type=AXFR cybersec.internal`
+Try to configure the server to allow & prevent this attack: `sudo cat /etc/bind/named.conf`
+
+```bash
+zone "cybersec.internal" {
+    type master;
+    file "/var/bind/cybersec.internal";
+    allow-transfer { any; };  # Allow zone transfers from any machine or change 'any' to 'none' or specific IP
+};
+```
+
+`sudo systemctl restart bind9`
