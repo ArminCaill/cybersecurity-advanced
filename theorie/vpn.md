@@ -91,24 +91,3 @@ Certificate created at: /home/vagrant/easy-rsa/easyrsa3/pki/issued/client.crt
 DH parameters of size 2048 created at: /home/vagrant/easy-rsa/easyrsa3/pki/dh.pem
 
 Configuring the server??
-
----
-
-ssh comp
-
-sudo systemctl list-units --type=service "openvpn*"
-sudo systemctl status openvpn
-
-sudo dnf install --assumeyes openvpn easy-rsa
-
-http://192.168.62.253:1194
-
-ca-cert = ls -la /home/vagrant/easy-rsa/easyrsa3/pki/ca.crt
-dh-params = ls -la /home/vagrant/easy-rsa/easyrsa3/pki/dh.pem
-public key = ls -la /home/vagrant/easy-rsa/easyrsa3/pki/reqs/client.req
-private key = ls -la /home/vagrant/easy-rsa/easyrsa3/pki/private/client.key
-
-sudo ls -a -l /usr/share/doc/openvpn/sample/sample-config-files/
-
-sudo nano /usr/share/doc/openvpn/sample/sample-config-files/server.conf
-sudo nano /usr/share/doc/openvpn/sample/sample-config-files/client.conf
